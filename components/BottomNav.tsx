@@ -1,0 +1,73 @@
+"use client";
+
+import React, { useContext } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
+import { Home, User } from 'lucide-react';
+import { SupabaseContext } from '../context/SupabaseContext';
+
+export function BottomNav() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const supabaseContext = useContext(SupabaseContext);
+  const { user } = supabaseContext || { user: null };
+
+  const isActive = (path: string) => pathname === path;
+
+  // Debug logging
+  console.log('BottomNav: pathname =', pathname);
+
+  const getNavItems = () => {
+    if (user?.role === 'vendor') {
+      return [
+        { path: '/account', icon: Home, label: 'Home', active: isActive('/account') }
+      ];
+    }
+    if (user?.role === 'viewer') {
+      return [
+        { path: '/home', icon: Home, label: 'Home', active: isActive('/home') },
+        { path: '/account', icon: User, label: 'Profile', active: isActive('/account') }
+      ];
+    }
+    return [] as Array<{ path: string; icon: any; label: string; active: boolean }>;
+  };
+
+  const navItems = getNavItems();
+
+  if (!user) return null;
+
+  return (
+    <nav className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-gray-100 z-40 safe-area shadow-lg">
+      <div className="max-w-md mx-auto px-3 py-1">
+        <div className="flex items-center justify-around">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <button
+                key={item.path}
+                onClick={() => router.push(item.path)}
+                className={`relative flex flex-col items-center justify-center py-1.5 px-2 rounded-xl transition-all duration-200 ${
+                  item.active
+                    ? 'text-rose-600 bg-rose-50/80 scale-105'
+                    : 'text-gray-400 hover:text-rose-600 hover:bg-gray-50/50 hover:scale-105'
+                }`}
+              >
+                <div className="relative">
+                  <Icon className={`w-4 h-4 ${item.active ? 'drop-shadow-sm' : ''}`} />
+                  {item.active && (
+                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-rose-500 rounded-full"></div>
+                  )}
+                </div>
+                <span className={`text-[10px] font-medium mt-0.5 leading-tight ${
+                  item.active ? 'text-rose-600' : 'text-gray-400'
+                }`}>
+                  {item.label}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </nav>
+  );
+}
+
