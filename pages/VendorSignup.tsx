@@ -172,19 +172,19 @@ export default function VendorSignup() {
         <div className="relative mb-3">
           <button
             onClick={() => router.back()}
-            className="absolute left-0 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            className="absolute left-0 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
           >
-            <ArrowLeft className="w-5 h-5 text-gray-600" />
+            <ArrowLeft className="w-5 h-5 text-gray-600 dark:text-gray-400" />
           </button>
-          <h1 className="text-xl font-bold text-gray-900 text-center">Vendor Sign Up</h1>
+          <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100 text-center">Vendor Sign Up</h1>
         </div>
 
         {/* Signup Form */}
-        <div className="bg-white rounded-2xl shadow-sm p-6">
+        <div className="bg-gray-100 dark:bg-gray-900 rounded-2xl shadow-sm p-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Business Name */}
             <div>
-              <label htmlFor="businessName" className="block text-xs font-medium text-gray-700 mb-2">
+              <label htmlFor="businessName" className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Business Name
               </label>
               <div className="relative">
@@ -195,7 +195,7 @@ export default function VendorSignup() {
                   name="businessName"
                   value={form.businessName}
                   onChange={(e) => handleInputChange('businessName', e.target.value)}
-                  className={`w-full pl-9 pr-3 py-2 text-sm rounded-lg border bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 shadow-sm ${errors.businessName ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-rose-500/40 focus:border-rose-500/60'}`}
+                  className={`w-full pl-9 pr-3 py-2 text-sm rounded-lg border bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 shadow-sm ${errors.businessName ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 dark:border-gray-600 focus:ring-rose-500/40 focus:border-rose-500/60'}`}
                   placeholder="Enter your business name"
                 />
               </div>
@@ -204,13 +204,13 @@ export default function VendorSignup() {
 
             {/* Categories (launch modal) */}
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-2">
+              <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Service Categories
               </label>
               <button
                 type="button"
                 onClick={openCategoryModal}
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 bg-white text-sm text-gray-700 hover:bg-gray-50 transition-colors text-left"
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 transition-colors text-left"
               >
                 {form.categories.length > 0
                   ? `Selected: ${form.categories.join(', ')}`
@@ -221,7 +221,7 @@ export default function VendorSignup() {
 
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-xs font-medium text-gray-700 mb-2">
+              <label htmlFor="email" className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Email Address
               </label>
               <div className="relative">
@@ -233,7 +233,7 @@ export default function VendorSignup() {
                   autoComplete="email"
                   value={form.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
-                  className={`w-full pl-9 pr-3 py-2 text-sm rounded-lg border bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 shadow-sm ${errors.email ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-rose-500/40 focus:border-rose-500/60'}`}
+                  className={`w-full pl-9 pr-3 py-2 text-sm rounded-lg border bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 shadow-sm ${errors.email ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 dark:border-gray-600 focus:ring-rose-500/40 focus:border-rose-500/60'}`}
                   placeholder="Enter your email address"
                 />
               </div>
@@ -242,7 +242,7 @@ export default function VendorSignup() {
 
             {/* Password */}
             <div>
-              <label htmlFor="password" className="block text-xs font-medium text-gray-700 mb-2">
+              <label htmlFor="password" className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Password
               </label>
               <div className="relative">
@@ -254,7 +254,7 @@ export default function VendorSignup() {
                   autoComplete="new-password"
                   value={form.password}
                   onChange={(e) => handleInputChange('password', e.target.value)}
-                  className={`w-full pl-9 pr-3 py-2 text-sm rounded-lg border bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 shadow-sm ${errors.password ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-rose-500/40 focus:border-rose-500/60'}`}
+                  className={`w-full pl-9 pr-3 py-2 text-sm rounded-lg border bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 shadow-sm ${errors.password ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 dark:border-gray-600 focus:ring-rose-500/40 focus:border-rose-500/60'}`}
                   placeholder="Enter your password"
                 />
               </div>
@@ -263,7 +263,7 @@ export default function VendorSignup() {
 
             {/* Confirm Password */}
             <div>
-              <label htmlFor="confirmPassword" className="block text-xs font-medium text-gray-700 mb-2">
+              <label htmlFor="confirmPassword" className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Confirm Password
               </label>
               <div className="relative">
@@ -275,7 +275,7 @@ export default function VendorSignup() {
                   autoComplete="new-password"
                   value={form.confirmPassword}
                   onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                  className={`w-full pl-9 pr-3 py-2 text-sm rounded-lg border bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 shadow-sm ${errors.confirmPassword ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-rose-500/40 focus:border-rose-500/60'}`}
+                  className={`w-full pl-9 pr-3 py-2 text-sm rounded-lg border bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 shadow-sm ${errors.confirmPassword ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 dark:border-gray-600 focus:ring-rose-500/40 focus:border-rose-500/60'}`}
                   placeholder="Confirm your password"
                 />
               </div>
@@ -293,7 +293,7 @@ export default function VendorSignup() {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-xs text-gray-600">
+            <p className="text-xs text-gray-600 dark:text-gray-400">
               Already have an account?{' '}
               <button
                 onClick={() => router.push('/vendor-login')}
@@ -305,7 +305,7 @@ export default function VendorSignup() {
           </div>
 
           <div className="mt-4 text-center">
-            <p className="text-xs text-gray-600">
+            <p className="text-xs text-gray-600 dark:text-gray-400">
               Are you a viewer?{' '}
               <button
                 onClick={() => router.push('/viewer-login')}
@@ -322,8 +322,8 @@ export default function VendorSignup() {
     {showCategoryModal && (
       <div className="fixed inset-0 z-50 flex items-center justify-center p-3">
         <div className="absolute inset-0 bg-black/40" onClick={() => setShowCategoryModal(false)} />
-        <div className="relative bg-white rounded-xl shadow-2xl w-full max-w-sm p-4">
-          <h3 className="text-base font-semibold text-gray-900 mb-3">Select Service Categories</h3>
+        <div className="relative bg-gray-100 dark:bg-gray-900 rounded-xl shadow-2xl w-full max-w-sm p-4">
+          <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-3">Select Service Categories</h3>
           <div className="grid grid-cols-2 gap-1.5 max-h-64 overflow-auto">
             {CATEGORIES.filter(cat => cat !== 'All').map(category => (
               <button
@@ -333,13 +333,13 @@ export default function VendorSignup() {
                 className={`flex items-center gap-2 p-2 rounded-lg border text-xs font-medium transition-colors ${
                   tempCategories.includes(category)
                     ? 'bg-rose-50 border-rose-300 text-rose-700'
-                    : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
+                    : 'bg-gray-100 dark:bg-gray-900 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50'
                 }`}
               >
                 <div className={`w-3.5 h-3.5 rounded border flex items-center justify-center ${
                   tempCategories.includes(category)
                     ? 'bg-rose-500 border-rose-500 border'
-                    : 'border-gray-300'
+                    : 'border-gray-300 dark:border-gray-600'
                 }`}>
                   {tempCategories.includes(category) && (
                     <Check className="w-2.5 h-2.5 text-white" />
@@ -353,7 +353,7 @@ export default function VendorSignup() {
             <button
               type="button"
               onClick={() => setShowCategoryModal(false)}
-              className="px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors text-xs"
+              className="px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 dark:text-gray-300 hover:bg-gray-200 transition-colors text-xs"
             >
               Cancel
             </button>

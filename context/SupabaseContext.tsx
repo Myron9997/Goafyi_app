@@ -58,18 +58,14 @@ export const SupabaseProvider: React.FC<SupabaseProviderProps> = ({ children }) 
     if (profile.role === 'vendor') {
       if (path !== '/account') {
         console.log("SupabaseContext: redirecting vendor to /account");
-        window.location.replace('/account')
+        // Force a full page navigation to ensure UI updates
+        window.location.href = '/account'
       }
     } else if (profile.role === 'viewer') {
       if (isAuthPage || path === '/dashboard') {
         console.log("SupabaseContext: redirecting viewer to /home");
-        // Use router.push for faster client-side navigation if available
-        if (typeof window !== 'undefined' && window.history?.pushState) {
-          window.history.pushState(null, '', '/home');
-          window.dispatchEvent(new PopStateEvent('popstate'));
-        } else {
-          window.location.replace('/home')
-        }
+        // Force a full page navigation to ensure UI updates
+        window.location.href = '/home'
       }
     }
   }
@@ -172,8 +168,8 @@ export const SupabaseProvider: React.FC<SupabaseProviderProps> = ({ children }) 
       const result = await AuthService.signIn(email, password)
       if (result?.user) {
         setUser(result.user as AuthUser)
-        // Ensure immediate redirect after manual sign-in
-        redirectAfterAuth(result.user as AuthUser)
+        // Don't auto-redirect here - let the login component handle it
+        // This prevents race conditions and ensures proper Next.js navigation
       }
       return result
     } finally {

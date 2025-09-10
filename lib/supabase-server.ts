@@ -1,8 +1,14 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
+// Cache the cookie store to avoid repeated await calls
+let cachedCookieStore: any = null;
+
 export async function createServerSupabaseClient() {
-  const cookieStore = await cookies()
+  // Cache the cookie store for better performance
+  if (!cachedCookieStore) {
+    cachedCookieStore = await cookies();
+  }
 
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -10,12 +16,12 @@ export async function createServerSupabaseClient() {
     {
       cookies: {
         getAll() {
-          return cookieStore.getAll()
+          return cachedCookieStore.getAll()
         },
         setAll(cookiesToSet) {
           try {
             cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
+              cachedCookieStore.set(name, value, options)
             )
           } catch {
             // The `setAll` method was called from a Server Component.

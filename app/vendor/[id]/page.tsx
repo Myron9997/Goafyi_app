@@ -6,6 +6,12 @@ import { notFound } from "next/navigation";
 
 export const revalidate = 30; // Revalidate every 30 seconds (faster updates)
 
+// Enable static generation for better performance
+export async function generateStaticParams() {
+  // This will be populated at build time for better performance
+  return [];
+}
+
 // Add cache tags for this vendor
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

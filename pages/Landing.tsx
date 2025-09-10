@@ -272,23 +272,23 @@ export default function Landing({
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-700 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-rose-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading vendors...</p>
+          <p className="text-gray-600 dark:text-gray-400">Loading vendors...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 scrollbar-hide">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-700 dark:bg-gray-900 scrollbar-hide transition-colors duration-300">
       {/* Header with Search */}
-      <div className="bg-white/80 backdrop-blur-md border-b border-white/20 sticky top-0 z-40">
+      <div className="bg-gray-100 dark:bg-gray-900/80 backdrop-blur-md border-b border-white/20 sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-4 py-3">
           {/* Search Bar */}
           <div className="sticky top-[56px] z-30 mb-3">
-            <div className="bg-white/80 backdrop-blur-md rounded-xl p-3 shadow-lg border border-white/20">
+            <div className="bg-gray-100 dark:bg-gray-900/80 backdrop-blur-md rounded-xl p-3 shadow-lg border border-white/20">
               <div className="flex gap-2">
                 <div className="relative flex-1">
                   <input
@@ -296,7 +296,7 @@ export default function Landing({
                     placeholder="Search vendors, locations, or services..."
                     value={searchInput}
                     onChange={(e) => handleSearchInputChange(e.target.value)}
-                    className="w-full pl-3 pr-3 py-2 text-sm border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500/50 transition-all duration-200 bg-white/60 backdrop-blur-sm shadow-sm hover:shadow-md"
+                    className="w-full pl-3 pr-3 py-2 text-sm border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500/50 transition-all duration-200 bg-gray-100 dark:bg-gray-900/60 backdrop-blur-sm shadow-sm hover:shadow-md"
                   />
                 </div>
                 <button
@@ -322,7 +322,7 @@ export default function Landing({
 
         {/* Results Header */}
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-xl font-bold text-gray-900">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
             {activeCategory === 'All' ? 'All Vendors' : activeCategory}
             <span className="text-sm font-normal text-gray-500 ml-2">
               ({filteredVendors.length} {filteredVendors.length === 1 ? 'vendor' : 'vendors'})
@@ -338,7 +338,7 @@ export default function Landing({
             <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <Search className="w-12 h-12 text-gray-400" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">No vendors found</h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">No vendors found</h3>
             <p className="text-gray-500 mb-6">
               {searchQuery.trim() 
                 ? `No vendors match your search for "${searchQuery}"`
@@ -352,7 +352,7 @@ export default function Landing({
                     setSearchQuery('');
                     setSearchInput('');
                   }}
-                  className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-all duration-300"
+                  className="bg-gray-100 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-lg hover:bg-gray-200 transition-all duration-300"
                 >
                   Clear Search
                 </button>
@@ -368,7 +368,7 @@ export default function Landing({
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {filteredVendors.map((vendor: any) => (
-              <div key={vendor.id} className="bg-white/20 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/40 overflow-hidden transform hover:scale-105 hover:shadow-2xl transition-all duration-300 cursor-pointer" style={{
+              <div key={vendor.id} className="bg-gray-100 dark:bg-gray-900/20 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/40 overflow-hidden transform hover:scale-105 hover:shadow-2xl transition-all duration-300 cursor-pointer" style={{
                 boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.6)',
                 background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.1) 100%)',
                 backdropFilter: 'blur(20px) saturate(180%)'
@@ -379,22 +379,22 @@ export default function Landing({
                   onClick={() => handleVendorClick(vendor)}
                 >
                   {/* View Count - Top Right Corner */}
-                  <div className="absolute top-1.5 right-1.5 px-1.5 py-1 rounded-lg bg-white/90 backdrop-blur-md flex items-center gap-1 shadow-lg">
-                    <Eye className="w-2.5 h-2.5 text-gray-700" />
-                    <span className="text-xs font-semibold text-gray-800">{vendorViewCounts[vendor.id] || 0}</span>
+                  <div className="absolute top-1.5 right-1.5 px-1.5 py-1 rounded-lg bg-gray-100 dark:bg-gray-900/90 backdrop-blur-md flex items-center gap-1 shadow-lg">
+                    <Eye className="w-2.5 h-2.5 text-gray-700 dark:text-gray-300" />
+                    <span className="text-xs font-semibold text-gray-800 dark:text-white">{vendorViewCounts[vendor.id] || 0}</span>
                   </div>
                 </div>
-                <div className="p-1.5 bg-white/10 backdrop-blur-md border-t border-white/20">
+                <div className="p-1.5 bg-gray-100 dark:bg-gray-900/10 backdrop-blur-md border-t border-white/20">
                   <div className="mb-1.5 ml-2">
-                    <h3 className="font-semibold text-gray-900 text-xs truncate text-center">{vendor.business_name}</h3>
-                    <p className="text-xs text-gray-600 truncate">{vendor.category}</p>
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-xs truncate text-center">{vendor.business_name}</h3>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 truncate">{vendor.category}</p>
                     
                     {/* Rating */}
                     <div className="flex items-center gap-1 mt-0.5">
                       {vendorRatings[vendor.id] && vendorRatings[vendor.id].total_ratings > 0 ? (
                         <>
                           {renderStars(Math.round(vendorRatings[vendor.id].average_rating), 'sm')}
-                          <span className="text-xs text-gray-700 font-medium">
+                          <span className="text-xs text-gray-700 dark:text-gray-300 font-medium">
                             {vendorRatings[vendor.id].average_rating.toFixed(1)}
                           </span>
                         </>
@@ -419,15 +419,15 @@ export default function Landing({
       {/* Sign In Prompt Modal */}
       {showSignInPrompt && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl">
+          <div className="bg-gray-100 dark:bg-gray-900 rounded-2xl p-6 max-w-sm w-full shadow-2xl">
             <div className="text-center">
               <div className="w-16 h-16 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <MessageCircle className="w-8 h-8 text-rose-700" />
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">
+              <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">
                 Sign In Required
               </h3>
-              <p className="text-gray-600 mb-6">
+              <p className="text-gray-600 dark:text-gray-400 mb-6">
                 Sign in to view vendor profiles, contact vendors, and book services.
               </p>
               <div className="space-y-3">
@@ -439,7 +439,7 @@ export default function Landing({
                 </button>
                 <button
                   onClick={() => setShowSignInPrompt(false)}
-                  className="w-full bg-gray-100 text-gray-700 py-2 px-4 rounded-lg font-semibold hover:bg-gray-200 transition-all duration-300"
+                  className="w-full bg-gray-100 text-gray-700 dark:text-gray-300 py-2 px-4 rounded-lg font-semibold hover:bg-gray-200 transition-all duration-300"
                 >
                   Cancel
                 </button>

@@ -39,7 +39,7 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#be185d" />
         <meta name="msapplication-tap-highlight" content="no" />
       </head>
-      <body className="min-h-screen bg-gray-50 safe-area" suppressHydrationWarning>
+      <body className="min-h-screen bg-gray-50 dark:bg-gray-900 safe-area transition-colors duration-300" suppressHydrationWarning>
         <SupabaseProvider>
           <AppProvider>
             <Header />

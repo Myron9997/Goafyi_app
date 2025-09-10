@@ -190,7 +190,13 @@ export default function Home({ initialVendors }: { initialVendors?: any[] }) {
 
 
   const handleVendorClick = (vendor: VendorWithUser) => {
+    // Use router.push with prefetch for instant navigation
     router.push(`/vendor/${vendor.id}`);
+  };
+
+  // Prefetch vendor profile on hover for instant navigation
+  const handleVendorHover = (vendor: VendorWithUser) => {
+    router.prefetch(`/vendor/${vendor.id}`);
   };
 
   const handleCategorySelect = (category: string) => {
@@ -258,23 +264,23 @@ export default function Home({ initialVendors }: { initialVendors?: any[] }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-700 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-rose-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading vendors...</p>
+          <p className="text-gray-600 dark:text-gray-400">Loading vendors...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 safe-area pb-20">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-700 dark:bg-gray-900 safe-area pb-20 transition-colors duration-300">
       <div className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-5">
 
         {/* Search and Categories (sticky search on mobile) */}
         <div className="space-y-3">
           <div className="sticky top-[56px] z-30">
-            <div className="bg-white/80 backdrop-blur-md rounded-xl p-3 shadow-lg border border-white/20">
+            <div className="bg-gray-100 dark:bg-gray-900/80 backdrop-blur-md rounded-xl p-3 shadow-lg border border-white/20">
               <div className="flex gap-2">
                 <div className="relative flex-1">
                   <input
@@ -282,7 +288,7 @@ export default function Home({ initialVendors }: { initialVendors?: any[] }) {
                     placeholder="Search vendors, locations, or services..."
                     value={searchInput}
                     onChange={(e) => handleSearchInputChange(e.target.value)}
-                    className="w-full pl-3 pr-3 py-2 text-sm border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500/50 transition-all duration-200 bg-white/60 backdrop-blur-sm shadow-sm hover:shadow-md"
+                    className="w-full pl-3 pr-3 py-2 text-sm border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500/50 transition-all duration-200 bg-gray-100 dark:bg-gray-900/60 backdrop-blur-sm shadow-sm hover:shadow-md"
                     suppressHydrationWarning={true}
                   />
                 </div>
@@ -307,7 +313,7 @@ export default function Home({ initialVendors }: { initialVendors?: any[] }) {
         {/* All Results */}
         <section className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
               {activeCategory === 'All' ? 'All Vendors' : activeCategory}
               <span className="text-lg font-normal text-gray-500 ml-2">
                 ({filteredVendors.length} {filteredVendors.length === 1 ? 'vendor' : 'vendors'})
@@ -323,7 +329,7 @@ export default function Home({ initialVendors }: { initialVendors?: any[] }) {
               <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Search className="w-12 h-12 text-gray-400" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No vendors found</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">No vendors found</h3>
               <p className="text-gray-500 mb-6">
                 {searchQuery.trim() 
                   ? `No vendors match your search for "${searchQuery}"`
@@ -353,39 +359,38 @@ export default function Home({ initialVendors }: { initialVendors?: any[] }) {
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
               {filteredVendors.map((vendor: any) => (
-                <div key={vendor.id} className="bg-white/20 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/40 overflow-hidden transform hover:scale-110 hover:shadow-2xl transition-all duration-300 cursor-pointer" style={{
-                  boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.6)',
-                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.1) 100%)',
-                  backdropFilter: 'blur(20px) saturate(180%)'
-                }}>
+                <div 
+                  key={vendor.id} 
+                  className="bg-gray-100 dark:bg-gray-900/20 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/40 overflow-hidden transform hover:scale-110 hover:shadow-2xl transition-all duration-300 cursor-pointer" 
+                  style={{
+                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.6)',
+                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.1) 100%)',
+                    backdropFilter: 'blur(20px) saturate(180%)'
+                  }}
+                  onClick={() => handleVendorClick(vendor)}
+                  onMouseEnter={() => handleVendorHover(vendor)}
+                >
                   <div 
                     className="h-20 w-full bg-cover bg-center relative" 
                     style={{ backgroundImage: `url('${(vendor.portfolio_images && vendor.portfolio_images[0]) || '/placeholder-image.svg'}')` }}
-                    onClick={() => handleVendorClick(vendor)}
                   >
-                    {/* View Count - Top Right Corner - Glassy 3D */}
-                    <div 
-                      className="absolute top-1.5 right-1.5 px-1.5 py-1 rounded-lg bg-white/90 backdrop-blur-md flex items-center gap-1 shadow-lg transform hover:scale-105 transition-all duration-200 border border-white/30"
-                      style={{
-                        boxShadow: '0 4px 12px -2px rgba(0, 0, 0, 0.15), 0 2px 4px -1px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.4)',
-                        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%)'
-                      }}
-                    >
-                      <Eye className="w-2.5 h-2.5 text-gray-700 drop-shadow-sm" />
-                      <span className="text-xs font-semibold text-gray-800 drop-shadow-sm">{vendorViewCounts[vendor.id] || 0}</span>
+                    {/* View Count - Top Right Corner */}
+                    <div className="absolute top-1.5 right-1.5 px-1.5 py-1 rounded-lg bg-gray-100 dark:bg-gray-900/90 backdrop-blur-md flex items-center gap-1 shadow-lg">
+                      <Eye className="w-2.5 h-2.5 text-gray-700 dark:text-gray-300" />
+                      <span className="text-xs font-semibold text-gray-800 dark:text-white">{vendorViewCounts[vendor.id] || 0}</span>
                     </div>
                   </div>
-                  <div className="p-1.5 bg-white/10 backdrop-blur-md border-t border-white/20">
+                  <div className="p-1.5 bg-gray-100 dark:bg-gray-900/10 backdrop-blur-md border-t border-white/20">
                      <div className="mb-1.5 ml-2">
-                       <h3 className="font-semibold text-gray-900 text-xs truncate drop-shadow-sm text-center">{vendor.business_name}</h3>
-                       <p className="text-xs text-gray-600 truncate drop-shadow-sm">{vendor.category}</p>
+                       <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-xs truncate drop-shadow-sm text-center">{vendor.business_name}</h3>
+                       <p className="text-xs text-gray-600 dark:text-gray-400 truncate drop-shadow-sm">{vendor.category}</p>
                        
                        {/* Rating */}
                        <div className="flex items-center gap-1 mt-0.5">
                          {vendorRatings[vendor.id] && vendorRatings[vendor.id].total_ratings > 0 ? (
                            <>
                              {renderStars(Math.round(vendorRatings[vendor.id].average_rating), 'sm')}
-                             <span className="text-xs text-gray-700 font-medium drop-shadow-sm">
+                             <span className="text-xs text-gray-700 dark:text-gray-300 font-medium drop-shadow-sm">
                                {vendorRatings[vendor.id].average_rating.toFixed(1)}
                              </span>
                            </>

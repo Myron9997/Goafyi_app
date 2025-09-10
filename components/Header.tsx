@@ -33,7 +33,7 @@ export function Header() {
   };
 
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-40 border-b border-gray-100">
+    <header className="bg-white dark:bg-gray-900 shadow-sm sticky top-0 z-40 border-b border-gray-100 dark:border-gray-800 transition-colors duration-300">
       <div className="max-w-6xl mx-auto px-4 h-12">
         <div className="flex items-center justify-between">
           {/* Logo */}
@@ -41,7 +41,7 @@ export function Header() {
             className="flex items-center gap-3 cursor-pointer"
             onClick={() => router.push('/')}
           >
-            <img src="/logo.png" alt="Logo" className="w-24 h-24 -mt-6 rounded-lg object-cover" />
+            <img src="/logo.png" alt="Logo" className="w-24 h-24 -mt-6 rounded-lg object-cover dark:invert" />
           </div>
 
           {/* Desktop Navigation */}
@@ -51,7 +51,7 @@ export function Header() {
                 <button
                   onClick={() => router.push('/home')}
                   className={`text-sm font-medium transition-colors ${
-                    isActive('/home') ? 'text-rose-700' : 'text-gray-600 hover:text-rose-700'
+                    isActive('/home') ? 'text-rose-700' : 'text-gray-600 dark:text-gray-300 hover:text-rose-700'
                   }`}
                 >
                   Home
@@ -59,7 +59,7 @@ export function Header() {
                 <button
                   onClick={() => router.push('/account')}
                   className={`text-sm font-medium transition-colors ${
-                    isActive('/account') ? 'text-rose-700' : 'text-gray-600 hover:text-rose-700'
+                    isActive('/account') ? 'text-rose-700' : 'text-gray-600 dark:text-gray-300 hover:text-rose-700'
                   }`}
                 >
                   Profile
@@ -70,7 +70,7 @@ export function Header() {
                 <button
                   onClick={() => router.push('/account')}
                   className={`text-sm font-medium transition-colors ${
-                    isActive('/account') ? 'text-rose-700' : 'text-gray-600 hover:text-rose-700'
+                    isActive('/account') ? 'text-rose-700' : 'text-gray-600 dark:text-gray-300 hover:text-rose-700'
                   }`}
                 >
                   Dashboard
@@ -81,7 +81,7 @@ export function Header() {
                 <button
                   onClick={() => router.push('/home')}
                   className={`text-sm font-medium transition-colors ${
-                    isActive('/home') ? 'text-rose-700' : 'text-gray-600 hover:text-rose-700'
+                    isActive('/home') ? 'text-rose-700' : 'text-gray-600 dark:text-gray-300 hover:text-rose-700'
                   }`}
                 >
                   Home
@@ -89,7 +89,7 @@ export function Header() {
                 <button
                   onClick={() => router.push('/search')}
                   className={`text-sm font-medium transition-colors ${
-                    isActive('/search') ? 'text-rose-700' : 'text-gray-600 hover:text-rose-700'
+                    isActive('/search') ? 'text-rose-700' : 'text-gray-600 dark:text-gray-300 hover:text-rose-700'
                   }`}
                 >
                   Search
@@ -105,7 +105,7 @@ export function Header() {
               <>
                 <button
                   onClick={() => router.push('/vendor-login')}
-                  className="text-sm font-medium text-gray-600 hover:text-rose-700 transition-colors"
+                  className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-rose-700 transition-colors"
                   suppressHydrationWarning={true}
                 >
                   Vendor Login
@@ -135,7 +135,7 @@ export function Header() {
               <>
                 <button
                   onClick={() => router.push('/vendor-login')}
-                  className="text-[12px] font-medium text-gray-600 hover:text-rose-700 transition-colors px-2 py-1"
+                  className="text-[12px] font-medium text-gray-600 dark:text-gray-300 hover:text-rose-700 transition-colors px-2 py-1"
                   suppressHydrationWarning={true}
                 >
                   Vendor Login
@@ -163,7 +163,7 @@ export function Header() {
           {!isLandingPage && !isVendorLoginPage && !isVendorSignupPage && !isViewerLoginPage && !isViewerHomePage && !isVendorProfilePage && !isAccountPage && (
             <button
               onClick={() => setMenuOpen(true)}
-              className="md:hidden p-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors -mt-5"
+              className="md:hidden p-2 rounded-lg border border-gray-200 dark:border-gray-700 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors -mt-5"
               aria-label="Open menu"
               suppressHydrationWarning={true}
             >
@@ -182,10 +182,10 @@ export function Header() {
           />
           <aside className="absolute right-0 top-0 h-full w-80 bg-white shadow-xl p-6 overflow-auto">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-semibold text-gray-900">Menu</h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Menu</h2>
               <button
                 onClick={() => setMenuOpen(false)}
-                className="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
+                className="p-2 rounded-lg border border-gray-200 dark:border-gray-700 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                 aria-label="Close menu"
               >
                 <X className="w-5 h-5 text-gray-600" />
@@ -198,7 +198,7 @@ export function Header() {
                   <button
                     onClick={() => handleNavigation('/account')}
                     className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
-                      isActive('/account') ? 'bg-rose-50 text-rose-700' : 'text-gray-700 hover:bg-gray-50'
+                      isActive('/account') ? 'bg-rose-50 dark:bg-rose-900/20 text-rose-700' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
                     }`}
                   >
                     Dashboard
@@ -209,7 +209,7 @@ export function Header() {
                   <button
                     onClick={() => handleNavigation('/home')}
                     className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
-                      isActive('/home') ? 'bg-rose-50 text-rose-700' : 'text-gray-700 hover:bg-gray-50'
+                      isActive('/home') ? 'bg-rose-50 dark:bg-rose-900/20 text-rose-700' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
                     }`}
                   >
                     Home
@@ -217,7 +217,7 @@ export function Header() {
                   <button
                     onClick={() => handleNavigation('/account')}
                     className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
-                      isActive('/account') ? 'bg-rose-50 text-rose-700' : 'text-gray-700 hover:bg-gray-50'
+                      isActive('/account') ? 'bg-rose-50 dark:bg-rose-900/20 text-rose-700' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
                     }`}
                   >
                     Profile
@@ -226,12 +226,12 @@ export function Header() {
               )}
             </nav>
 
-            <div className="mt-8 pt-6 border-t border-gray-200">
+            <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
               {!user ? (
                 <div className="space-y-3">
                   <button
                     onClick={() => handleNavigation('/vendor-login')}
-                    className="w-full text-left px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                    className="w-full text-left px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                     suppressHydrationWarning={true}
                   >
                     Vendor Login
@@ -248,7 +248,7 @@ export function Header() {
                 <div className="space-y-3">
                   <button
                     onClick={handleLogout}
-                    className="w-full text-left px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                    className="w-full text-left px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                   >
                     Sign Out
                   </button>

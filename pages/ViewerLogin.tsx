@@ -27,6 +27,7 @@ export default function ViewerLogin() {
       router.prefetch('/vendor-login');
       router.prefetch('/signup');
       router.prefetch('/home'); // Prefetch home page for fast redirect
+      router.prefetch('/account'); // Also prefetch account for vendors
     } catch {}
     document.body.style.overflow = 'hidden';
     // Check if mode=signup is in URL params
@@ -115,34 +116,34 @@ export default function ViewerLogin() {
   };
 
   return (
-    <div className="min-h-[100dvh] h-[100dvh] bg-white overflow-hidden">
+    <div className="min-h-[100dvh] h-[100dvh] bg-gray-100 dark:bg-gray-900 dark:bg-gray-900 overflow-hidden transition-colors duration-300">
       <div className="px-4 pt-4">
         <div className="relative mb-2">
-          <button onClick={() => router.push('/')} className="absolute left-0 p-2 rounded-lg hover:bg-gray-100 transition-colors">
-            <ArrowLeft className="w-4 h-4 text-gray-600" />
+          <button onClick={() => router.push('/')} className="absolute left-0 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+            <ArrowLeft className="w-4 h-4 text-gray-600 dark:text-gray-400" />
           </button>
         </div>
 
         {/* Logo Section (only on login, not on signup) */}
         {!isSignUp && (
           <div className="flex justify-center mb-4">
-            <div className="w-40 h-40 bg-white rounded-full shadow-sm flex items-center justify-center">
-              <img src="/logo.png" alt="GoaFYI Logo" className="w-32 h-32 rounded-full object-cover" />
+            <div className="w-40 h-40 bg-gray-200 dark:bg-gray-800 rounded-full shadow-sm flex items-center justify-center">
+              <img src="/logo.png" alt="GoaFYI Logo" className="w-32 h-32 rounded-full object-cover dark:invert" />
             </div>
           </div>
         )}
 
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-serif font-bold text-gray-900">
+          <h1 className="text-2xl font-serif font-bold text-gray-900 dark:text-gray-100">
             {isSignUp ? 'Viewer Sign Up' : 'Viewer Login'}
           </h1>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm p-4">
+        <div className="bg-gray-100 dark:bg-gray-900 rounded-2xl shadow-sm p-4">
           <form onSubmit={handleSubmit} className="space-y-3">
             {isSignUp && (
               <div>
-                <label htmlFor="fullName" className="block text-xs font-medium text-gray-700 mb-1">Full Name</label>
+                <label htmlFor="fullName" className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <input
@@ -151,7 +152,7 @@ export default function ViewerLogin() {
                     type="text"
                     value={form.fullName}
                     onChange={(e) => setForm(prev => ({ ...prev, fullName: e.target.value }))}
-                    className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-500/40 focus:border-rose-500/60 shadow-sm"
+                    className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-500/40 focus:border-rose-500/60 shadow-sm"
                     placeholder="Enter your full name"
                   />
                 </div>
@@ -159,7 +160,7 @@ export default function ViewerLogin() {
             )}
 
             <div>
-              <label htmlFor="email" className="block text-xs font-medium text-gray-700 mb-1">Email Address</label>
+              <label htmlFor="email" className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input
@@ -169,14 +170,14 @@ export default function ViewerLogin() {
                   autoComplete="email"
                   value={form.email}
                   onChange={(e) => setForm(prev => ({ ...prev, email: e.target.value }))}
-                  className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-500/40 focus:border-rose-500/60 shadow-sm"
+                  className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-500/40 focus:border-rose-500/60 shadow-sm"
                   placeholder="Enter your email"
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-xs font-medium text-gray-700 mb-1">Password</label>
+              <label htmlFor="password" className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input
@@ -186,7 +187,7 @@ export default function ViewerLogin() {
                   autoComplete={isSignUp ? 'new-password' : 'current-password'}
                   value={form.password}
                   onChange={(e) => setForm(prev => ({ ...prev, password: e.target.value }))}
-                  className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-500/40 focus:border-rose-500/60 shadow-sm"
+                  className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-500/40 focus:border-rose-500/60 shadow-sm"
                   placeholder="Enter your password"
                 />
               </div>
@@ -194,7 +195,7 @@ export default function ViewerLogin() {
 
             {isSignUp && (
               <div>
-                <label htmlFor="confirmPassword" className="block text-xs font-medium text-gray-700 mb-1">Confirm Password</label>
+                <label htmlFor="confirmPassword" className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Confirm Password</label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <input
@@ -204,7 +205,7 @@ export default function ViewerLogin() {
                     autoComplete="new-password"
                     value={form.confirmPassword}
                     onChange={(e) => setForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                    className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-500/40 focus:border-rose-500/60 shadow-sm"
+                    className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-500/40 focus:border-rose-500/60 shadow-sm"
                     placeholder="Confirm your password"
                   />
                 </div>
@@ -221,7 +222,7 @@ export default function ViewerLogin() {
             </button>
           </form>
 
-          <div className="mt-4 text-center text-xs text-gray-600">
+          <div className="mt-4 text-center text-xs text-gray-600 dark:text-gray-400">
             <span>{isSignUp ? 'Already have an account?' : "Don't have an account?"} </span>
             <button 
               onClick={() => {

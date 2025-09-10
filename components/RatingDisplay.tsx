@@ -68,7 +68,7 @@ export function RatingDisplay({
             className={`${sizeClasses[size]} ${
               star <= rating
                 ? 'text-yellow-400 fill-current'
-                : 'text-gray-300'
+                : 'text-gray-300 dark:text-gray-600'
             }`}
           />
         ))}
@@ -86,10 +86,10 @@ export function RatingDisplay({
 
   if (loading) {
     return (
-      <div className="bg-white rounded-lg p-4 border border-gray-200">
+      <div className="bg-gray-100 dark:bg-gray-900 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
         <div className="animate-pulse">
-          <div className="h-4 bg-gray-200 rounded w-1/3 mb-2"></div>
-          <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+          <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded w-1/3 mb-2"></div>
+          <div className="h-3 bg-gray-200 dark:bg-gray-600 rounded w-1/2"></div>
         </div>
       </div>
     );
@@ -97,10 +97,10 @@ export function RatingDisplay({
 
   if (!ratingStats || ratingStats.total_ratings === 0) {
     return (
-      <div className="bg-white rounded-lg p-4 border border-gray-200">
+      <div className="bg-gray-100 dark:bg-gray-900 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
         <div className="text-center py-4">
-          <Star className="w-8 h-8 text-gray-300 mx-auto mb-2" />
-          <p className="text-gray-500 text-sm mb-3">No ratings yet</p>
+          <Star className="w-8 h-8 text-gray-300 dark:text-gray-600 mx-auto mb-2" />
+          <p className="text-gray-500 dark:text-gray-400 text-sm mb-3">No ratings yet</p>
           {showRateButton && userId && (
             <button
               onClick={onRateClick}
@@ -115,17 +115,17 @@ export function RatingDisplay({
   }
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200">
+    <div className="bg-gray-100 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
       {/* Rating Summary */}
-      <div className="p-4 border-b border-gray-200">
+      <div className="p-4 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center space-x-3">
-            <div className="text-2xl font-bold text-gray-900">
+            <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
               {ratingStats.average_rating.toFixed(1)}
             </div>
             <div>
               {renderStars(Math.round(ratingStats.average_rating), 'md')}
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                 {ratingStats.total_ratings} {ratingStats.total_ratings === 1 ? 'rating' : 'ratings'}
               </p>
             </div>
@@ -146,9 +146,9 @@ export function RatingDisplay({
         <div className="space-y-1">
           {ratingStats.rating_distribution.map(({ rating, count }) => (
             <div key={rating} className="flex items-center space-x-2">
-              <span className="text-sm text-gray-600 w-2">{rating}</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400 w-2">{rating}</span>
               <Star className="w-3 h-3 text-yellow-400 fill-current" />
-              <div className="flex-1 bg-gray-200 rounded-full h-2">
+              <div className="flex-1 bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                 <div
                   className="bg-yellow-400 h-2 rounded-full"
                   style={{
@@ -156,7 +156,7 @@ export function RatingDisplay({
                   }}
                 />
               </div>
-              <span className="text-sm text-gray-500 w-8">{count}</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400 w-8">{count}</span>
             </div>
           ))}
         </div>
@@ -166,7 +166,7 @@ export function RatingDisplay({
       {reviews.length > 0 && (
         <div className="p-4">
           <div className="flex items-center justify-between mb-3">
-            <h4 className="font-medium text-gray-900">Reviews</h4>
+            <h4 className="font-medium text-gray-900 dark:text-gray-100">Reviews</h4>
             {reviews.length > 3 && (
               <button
                 onClick={() => setShowAllReviews(!showAllReviews)}
@@ -187,23 +187,23 @@ export function RatingDisplay({
 
           <div className="space-y-4">
             {(showAllReviews ? reviews : reviews.slice(0, 3)).map((review) => (
-              <div key={review.id} className="border-b border-gray-100 last:border-b-0 pb-4 last:pb-0">
+              <div key={review.id} className="border-b border-gray-100 dark:border-gray-700 last:border-b-0 pb-4 last:pb-0">
                 <div className="flex items-start space-x-3">
                   <div className="w-8 h-8 bg-gradient-to-br from-rose-500 to-pink-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
                     {review.reviewer.full_name?.charAt(0) || 'U'}
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center space-x-2 mb-1">
-                      <span className="font-medium text-gray-900 text-sm">
+                      <span className="font-medium text-gray-900 dark:text-gray-100 text-sm">
                         {review.reviewer.full_name || 'Anonymous'}
                       </span>
                       {renderStars(review.rating, 'sm')}
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-gray-500 dark:text-gray-400">
                         {formatDate(review.created_at)}
                       </span>
                     </div>
                     {review.review_text && (
-                      <p className="text-sm text-gray-700 leading-relaxed">
+                      <p className="text-sm text-gray-700 dark:text-gray-300 dark:text-gray-600 leading-relaxed">
                         {review.review_text}
                       </p>
                     )}

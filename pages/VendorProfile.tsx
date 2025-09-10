@@ -64,13 +64,13 @@ export default function VendorProfile({ initialVendor }: { initialVendor?: any }
       }
       setLoading(false);
       
-      // Track the view
+      // Track the view asynchronously to not block UI
       if (id) {
-        ViewService.trackViewWithDuplicatePrevention(id, user?.id);
+        ViewService.trackViewWithDuplicatePrevention(id, user?.id).catch(console.error);
       }
       
-      // Refresh data in background for next visit
-      loadVendorInBackground();
+      // Refresh data in background for next visit (non-blocking)
+      setTimeout(() => loadVendorInBackground(), 100);
       return;
     }
     
@@ -91,28 +91,26 @@ export default function VendorProfile({ initialVendor }: { initialVendor?: any }
         // Ensure we're at the top after setting vendor data
         window.scrollTo(0, 0);
 
-        // Track the view
+        // Track the view and load additional data asynchronously
         if (vendorData) {
-          await ViewService.trackViewWithDuplicatePrevention(id, user?.id);
+          // Track view asynchronously to not block UI
+          ViewService.trackViewWithDuplicatePrevention(id, user?.id).catch(console.error);
           
-          // Load view count
-          const count = await ViewService.getViewCount(id);
-          setViewCount(count);
-
-          // Load user's rating if logged in
-          if (user?.id) {
-            const existingRating = await RatingService.getUserRating(id, user.id);
+          // Load additional data in parallel
+          Promise.all([
+            ViewService.getViewCount(id),
+            user?.id ? RatingService.getUserRating(id, user.id) : Promise.resolve(null),
+            RatingService.getVendorRatingStats(id)
+          ]).then(([count, existingRating, stats]) => {
+            setViewCount(count || 0);
             setUserRating(existingRating);
-          }
-
-          // Load rating stats
-          const stats = await RatingService.getVendorRatingStats(id);
-          if (stats) {
-            setRatingStats({
-              average_rating: stats.average_rating,
-              total_ratings: stats.total_ratings
-            });
-          }
+            if (stats) {
+              setRatingStats({
+                average_rating: stats.average_rating,
+                total_ratings: stats.total_ratings
+              });
+            }
+          }).catch(console.error);
         }
       } catch (err) {
         console.error('Error loading vendor:', err);
@@ -241,10 +239,10 @@ export default function VendorProfile({ initialVendor }: { initialVendor?: any }
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-700 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-rose-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading vendor profile...</p>
+          <p className="text-gray-600 dark:text-gray-400">Loading vendor profile...</p>
         </div>
       </div>
     );
@@ -252,12 +250,12 @@ export default function VendorProfile({ initialVendor }: { initialVendor?: any }
 
   if (error || !vendor) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-700 flex items-center justify-center">
         <div className="text-center">
           <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <MapPin className="w-12 h-12 text-gray-400" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Vendor not found</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Vendor not found</h3>
           <p className="text-gray-500 mb-6">{error || 'This vendor profile could not be found.'}</p>
           <button
             onClick={() => router.push('/home')}
@@ -277,7 +275,7 @@ export default function VendorProfile({ initialVendor }: { initialVendor?: any }
   const profileImage = vendor.user?.avatar_url || '/placeholder-image.svg';
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-700 dark:bg-gray-900 transition-colors duration-300">
       <div className="max-w-4xl mx-auto">
         {/* Cover Photo with back button */}
         <div className="relative h-48 sm:h-64">
@@ -290,21 +288,21 @@ export default function VendorProfile({ initialVendor }: { initialVendor?: any }
           {/* Back button positioned on cover image */}
           <button
             onClick={() => router.push('/home')}
-            className="absolute top-4 left-4 p-2 rounded-lg bg-white/80 backdrop-blur-sm hover:bg-white/90 transition-colors"
+            className="absolute top-4 left-4 p-2 rounded-lg bg-gray-100 dark:bg-gray-900/80 backdrop-blur-sm hover:bg-gray-100 dark:bg-gray-900/90 transition-colors"
           >
-            <ArrowLeft className="w-5 h-5 text-gray-700" />
+            <ArrowLeft className="w-5 h-5 text-gray-700 dark:text-gray-300" />
           </button>
           
           {/* View count in top right corner */}
-          <div className="absolute top-4 right-4 px-3 py-2 rounded-lg bg-white/80 backdrop-blur-sm flex items-center gap-2">
-            <Eye className="w-4 h-4 text-gray-600" />
-            <span className="text-sm font-medium text-gray-700">{viewCount}</span>
+          <div className="absolute top-4 right-4 px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-900/80 backdrop-blur-sm flex items-center gap-2">
+            <Eye className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{viewCount}</span>
           </div>
         </div>
 
         {/* Profile Section */}
         <div className="relative -mt-16 px-4 pb-6">
-          <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 p-6 transform hover:scale-[1.02] transition-transform duration-200">
+          <div className="bg-gray-100 dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 p-6 transform hover:scale-[1.02] transition-transform duration-200">
             {/* Profile Picture */}
             <div className="flex flex-col items-center mb-6">
               <div className="w-24 h-24 rounded-full shadow-2xl overflow-hidden -mt-12 transform hover:scale-110 transition-transform duration-300" style={{
@@ -322,10 +320,10 @@ export default function VendorProfile({ initialVendor }: { initialVendor?: any }
                   </div>
                 )}
               </div>
-              <h2 className="text-2xl font-bold text-gray-900 mt-4 text-center">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-4 text-center">
                 {vendor.business_name}
               </h2>
-              <p className="text-gray-600 text-center">
+              <p className="text-gray-600 dark:text-gray-400 text-center">
                 {vendor.full_name}
               </p>
               
@@ -334,7 +332,7 @@ export default function VendorProfile({ initialVendor }: { initialVendor?: any }
                 {ratingStats && ratingStats.total_ratings > 0 ? (
                   <>
                     {renderStars(Math.round(ratingStats.average_rating), 'sm')}
-                    <span className="text-sm font-medium text-gray-700">
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                       {ratingStats.average_rating.toFixed(1)}
                     </span>
                     <span className="text-xs text-gray-500">
@@ -395,14 +393,14 @@ export default function VendorProfile({ initialVendor }: { initialVendor?: any }
               {vendor.email && (
                 <div className="flex items-center gap-3">
                   <Mail className="w-5 h-5 text-gray-400" />
-                  <span className="text-gray-700">{vendor.email}</span>
+                  <span className="text-gray-700 dark:text-gray-300">{vendor.email}</span>
                 </div>
               )}
               
               {vendor.phone && (
                 <div className="flex items-center gap-3">
                   <Phone className="w-5 h-5 text-gray-400" />
-                  <span className="text-gray-700">{vendor.phone}</span>
+                  <span className="text-gray-700 dark:text-gray-300">{vendor.phone}</span>
                 </div>
               )}
 
@@ -424,7 +422,7 @@ export default function VendorProfile({ initialVendor }: { initialVendor?: any }
                 className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-1 transform ${
                   vendor.contact_phone 
                     ? 'bg-green-500 text-white hover:bg-green-600' 
-                    : 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                    : 'bg-gray-300 text-gray-600 dark:text-gray-400 cursor-not-allowed'
                 }`}
                 style={{
                   boxShadow: vendor.contact_phone 
@@ -471,8 +469,8 @@ export default function VendorProfile({ initialVendor }: { initialVendor?: any }
         {/* Portfolio Images */}
         {vendor.portfolio_images && vendor.portfolio_images.length > 1 && (
           <div className="px-4 pb-6">
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Portfolio</h3>
+            <div className="bg-gray-100 dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Portfolio</h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {vendor.portfolio_images.slice(1).map((image, index) => (
                   <div
@@ -490,9 +488,9 @@ export default function VendorProfile({ initialVendor }: { initialVendor?: any }
       {/* Message Template Modal */}
       {showMessageModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl w-full max-w-md">
-            <div className="flex items-center justify-between p-4 border-b border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900">Send Instagram Message</h3>
+          <div className="bg-gray-100 dark:bg-gray-900 rounded-2xl w-full max-w-md">
+            <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Send Instagram Message</h3>
               <button
                 onClick={() => setShowMessageModal(false)}
                 className="p-1 rounded-lg hover:bg-gray-100 transition-colors"
@@ -508,7 +506,7 @@ export default function VendorProfile({ initialVendor }: { initialVendor?: any }
                 </p>
               </div>
               
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Your message to {vendor?.business_name}:
               </label>
               <textarea
@@ -520,7 +518,7 @@ export default function VendorProfile({ initialVendor }: { initialVendor?: any }
               <div className="flex gap-3 mt-4">
                 <button
                   onClick={() => setShowMessageModal(false)}
-                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:bg-gray-700 transition-colors"
                 >
                   Cancel
                 </button>

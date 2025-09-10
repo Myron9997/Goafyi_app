@@ -1,44 +1,24 @@
-import { redirect } from 'next/navigation';
+import { Suspense } from 'react';
 import Account from "../../pages/Account";
-import { createServerSupabaseClient } from '../../lib/supabase-server';
-import { VendorService } from '../../services/vendorService';
 
-export const revalidate = 120; // Revalidate every 120 seconds
-export const dynamic = 'force-dynamic'; // Force dynamic rendering for authentication
+// Loading component for better UX
+function AccountLoading() {
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center transition-colors duration-300">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-600 mx-auto mb-4"></div>
+        <p className="text-gray-600 dark:text-gray-400">Loading account...</p>
+      </div>
+    </div>
+  );
+}
 
-export default async function AccountPage() {
-  try {
-    // Create server-side Supabase client
-    const supabase = await createServerSupabaseClient();
-    
-    // Get the current user session
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    
-    // If unauthenticated or auth error, avoid server redirect to prevent loops.
-    // Render client component which will handle login flow.
-    if (authError || !user) {
-      return <Account />;
-    }
-    
-    // Fetch vendor data for the authenticated user
-    const vendorData = await VendorService.getVendorByUserIdServer(supabase, user.id);
-    
-    // If no vendor profile exists, let client handle onboarding routing
-    if (!vendorData) {
-      return <Account />;
-    }
-    
-    // Pass the initial vendor data to the client component
-    return <Account initialVendor={vendorData} />;
-    
-  } catch (error) {
-    // Handle NEXT_REDIRECT errors gracefully (these are expected)
-    if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
-      throw error; // Re-throw redirect errors to let Next.js handle them
-    }
-    
-    // For other errors, fall back to client-side rendering
-    console.error('AccountPage SSR failed, falling back to client-side:', error);
-    return <Account />;
-  }
+export default function AccountPage() {
+  // Pure client-side approach - no SSR at all
+  // This eliminates auth race conditions and provides instant loading
+  return (
+    <Suspense fallback={<AccountLoading />}>
+      <Account />
+    </Suspense>
+  );
 }

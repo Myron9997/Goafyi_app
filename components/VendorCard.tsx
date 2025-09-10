@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { Heart, Star, MapPin, Phone, MessageCircle } from 'lucide-react';
 import { VendorWithUser } from '../services/vendorService';
 
@@ -36,9 +37,10 @@ export function VendorCard({ vendor, onView, compact = false }: VendorCardProps)
 
   if (compact) {
     return (
-      <div 
-        className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 cursor-pointer hover:shadow-md transition-shadow"
-        onClick={onView}
+      <Link 
+        href={`/vendor/${vendor.id}`}
+        className="bg-gray-100 dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-4 cursor-pointer hover:shadow-md transition-all duration-200 block"
+        prefetch={true}
       >
         <div className="flex gap-3">
           <div 
@@ -48,7 +50,7 @@ export function VendorCard({ vendor, onView, compact = false }: VendorCardProps)
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between">
               <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-gray-900 truncate">{vendor.business_name}</h3>
+                <h3 className="font-semibold text-gray-900 dark:text-gray-100 truncate">{vendor.business_name}</h3>
                 <p className="text-sm text-gray-500 truncate">{vendor.category}</p>
                 <div className="flex items-center gap-1 mt-1">
                   <MapPin className="w-3 h-3 text-gray-400" />
@@ -85,14 +87,15 @@ export function VendorCard({ vendor, onView, compact = false }: VendorCardProps)
             </div>
           </div>
         </div>
-      </div>
+      </Link>
     );
   }
 
   return (
-    <div 
-      className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md transition-shadow"
-      onClick={onView}
+    <Link 
+      href={`/vendor/${vendor.id}`}
+        className="bg-gray-100 dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden cursor-pointer hover:shadow-md transition-all duration-200 block"
+      prefetch={true}
     >
       {/* Image */}
       <div 
@@ -109,7 +112,7 @@ export function VendorCard({ vendor, onView, compact = false }: VendorCardProps)
         <button
           onClick={handleSave}
           className={`absolute top-3 right-3 p-2 rounded-full bg-white/80 backdrop-blur-sm transition-colors ${
-            isSaved ? 'text-rose-700' : 'text-gray-600 hover:text-rose-700'
+            isSaved ? 'text-rose-700' : 'text-gray-600 dark:text-gray-400 hover:text-rose-700'
           }`}
         >
           <Heart className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
@@ -120,7 +123,7 @@ export function VendorCard({ vendor, onView, compact = false }: VendorCardProps)
       <div className="p-4">
         <div className="flex items-start justify-between mb-2">
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-gray-900 truncate">{vendor.business_name}</h3>
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100 truncate">{vendor.business_name}</h3>
             <p className="text-sm text-gray-500 truncate">{vendor.category}</p>
           </div>
           <div className="flex items-center gap-1 ml-2">
@@ -144,12 +147,9 @@ export function VendorCard({ vendor, onView, compact = false }: VendorCardProps)
         </div>
 
         <div className="flex gap-2">
-          <button 
-            onClick={onView}
-            className="flex-1 btn-primary text-sm py-2"
-          >
+          <div className="flex-1 btn-primary text-sm py-2 text-center">
             View Details
-          </button>
+          </div>
           <div className="flex gap-1">
             {vendor.contact_phone && (
               <button
@@ -165,7 +165,7 @@ export function VendorCard({ vendor, onView, compact = false }: VendorCardProps)
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 

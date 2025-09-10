@@ -15,6 +15,26 @@ const nextConfig: NextConfig = {
     domains: [],
     unoptimized: false,
   },
+  // Performance optimizations
+  experimental: {
+    optimizePackageImports: ['lucide-react'],
+  },
+  // Enable compression
+  compress: true,
+  // Optimize bundle
+  webpack: (config) => {
+    config.optimization.splitChunks = {
+      chunks: 'all',
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all',
+        },
+      },
+    };
+    return config;
+  },
 };
 
 export default nextConfig;
