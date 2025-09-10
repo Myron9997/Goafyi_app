@@ -128,7 +128,8 @@ export default function ViewerLogin() {
         {!isSignUp && (
           <div className="flex justify-center mb-4">
             <div className="w-40 h-40 bg-gray-200 dark:bg-gray-800 rounded-full shadow-sm flex items-center justify-center">
-              <img src="/logo.png" alt="GoaFYI Logo" className="w-32 h-32 rounded-full object-cover dark:invert" />
+              <img src="/logo.png" alt="GoaFYI Logo" className="w-32 h-32 rounded-full object-cover dark:hidden" />
+              <img src="/logodark.png" alt="GoaFYI Logo" className="w-32 h-32 rounded-full object-cover hidden dark:block" />
             </div>
           </div>
         )}

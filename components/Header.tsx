@@ -41,7 +41,8 @@ export function Header() {
             className="flex items-center gap-3 cursor-pointer"
             onClick={() => router.push('/')}
           >
-            <img src="/logo.png" alt="Logo" className="w-24 h-24 -mt-6 rounded-lg object-cover dark:invert" />
+            <img src="/logo.png" alt="Logo" className="w-24 h-24 -mt-6 rounded-lg object-cover dark:hidden" />
+            <img src="/logodark.png" alt="Logo" className="w-24 h-24 -mt-6 rounded-lg object-cover hidden dark:block" />
           </div>
 
           {/* Desktop Navigation */}
