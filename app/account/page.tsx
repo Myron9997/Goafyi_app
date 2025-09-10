@@ -14,17 +14,18 @@ export default async function AccountPage() {
     // Get the current user session
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     
-    // If no user or auth error, redirect to vendor login
+    // If unauthenticated or auth error, avoid server redirect to prevent loops.
+    // Render client component which will handle login flow.
     if (authError || !user) {
-      redirect('/vendor-login');
+      return <Account />;
     }
     
     // Fetch vendor data for the authenticated user
     const vendorData = await VendorService.getVendorByUserIdServer(supabase, user.id);
     
-    // If no vendor profile exists, redirect to signup
+    // If no vendor profile exists, let client handle onboarding routing
     if (!vendorData) {
-      redirect('/signup');
+      return <Account />;
     }
     
     // Pass the initial vendor data to the client component
