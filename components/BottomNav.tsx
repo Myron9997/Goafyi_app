@@ -1,34 +1,79 @@
 "use client";
 
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { Home, User } from 'lucide-react';
+import { Home, User, LayoutDashboard, Calendar, Inbox } from 'lucide-react';
 import { SupabaseContext } from '../context/SupabaseContext';
+import { supabase } from '../lib/supabase';
 
 export function BottomNav() {
   const router = useRouter();
   const pathname = usePathname();
   const supabaseContext = useContext(SupabaseContext);
   const { user } = supabaseContext || { user: null };
+  const [unreadCount, setUnreadCount] = useState(0);
 
   const isActive = (path: string) => pathname === path;
 
   // Debug logging
   console.log('BottomNav: pathname =', pathname);
 
+  // Fetch unread message count for vendors
+  useEffect(() => {
+    if (user?.role === 'vendor' && user?.id) {
+      const fetchUnreadCount = async () => {
+        const { count, error } = await supabase
+          .from('messages')
+          .select('*', { count: 'exact', head: true })
+          .eq('receiver_id', user.id)
+          .eq('is_read', false);
+        
+        if (!error && count !== null) {
+          setUnreadCount(count);
+        }
+      };
+
+      fetchUnreadCount();
+      
+      // Set up real-time subscription for new messages
+      const subscription = supabase
+        .channel('messages')
+        .on('postgres_changes', 
+          { 
+            event: 'INSERT', 
+            schema: 'public', 
+            table: 'messages',
+            filter: `receiver_id=eq.${user.id}`
+          }, 
+          () => {
+            fetchUnreadCount();
+          }
+        )
+        .subscribe();
+
+      return () => {
+        subscription.unsubscribe();
+      };
+    }
+  }, [user?.id, user?.role]);
+
   const getNavItems = () => {
     if (user?.role === 'vendor') {
       return [
-        { path: '/account', icon: Home, label: 'Home', active: isActive('/account') }
+        { path: '/account/dashboard', icon: LayoutDashboard, label: 'Dashboard', active: isActive('/account/dashboard') },
+        { path: '/account/availability', icon: Calendar, label: 'Availability', active: isActive('/account/availability') },
+        { path: '/account/bookings', icon: Inbox, label: 'Bookings', active: isActive('/account/bookings'), badge: unreadCount },
+        { path: '/account', icon: User, label: 'Profile', active: isActive('/account') }
       ];
     }
     if (user?.role === 'viewer') {
       return [
         { path: '/home', icon: Home, label: 'Home', active: isActive('/home') },
+        { path: '/viewer/bookings', icon: Inbox, label: 'Bookings', active: isActive('/viewer/bookings') },
         { path: '/account', icon: User, label: 'Profile', active: isActive('/account') }
       ];
     }
-    return [] as Array<{ path: string; icon: any; label: string; active: boolean }>;
+    return [] as Array<{ path: string; icon: any; label: string; active: boolean; badge?: number }>;
   };
 
   const navItems = getNavItems();
@@ -55,6 +100,11 @@ export function BottomNav() {
                   <Icon className={`w-4 h-4 ${item.active ? 'drop-shadow-sm' : ''}`} />
                   {item.active && (
                     <div className="absolute -top-1 -right-1 w-2 h-2 bg-rose-500 rounded-full"></div>
+                  )}
+                  {item.badge && item.badge > 0 && (
+                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[8px] rounded-full flex items-center justify-center font-bold">
+                      {item.badge > 9 ? '9+' : item.badge}
+                    </div>
                   )}
                 </div>
                 <span className={`text-[10px] font-medium mt-0.5 leading-tight ${
