@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useSupabase } from '../../../context/SupabaseContext';
 import { VendorService } from '../../../services/vendorService';
@@ -25,7 +25,7 @@ type PackageItem = {
   terms?: string;
 };
 
-export default function AvailabilityPage() {
+function AvailabilityPageContent() {
   const searchParams = useSearchParams();
   const { user } = useSupabase();
   const [activeTab, setActiveTab] = useState<'packages' | 'availability'>('packages');
@@ -853,6 +853,22 @@ function AvailabilitySummary({ daysOff, blockedDates, cursor, setCursor, booking
         ))}
       </div>
     </div>
+  );
+}
+
+export default function AvailabilityPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
+        <div className="max-w-md mx-auto">
+          <div className="text-center py-8">
+            <div className="text-sm text-gray-500">Loading...</div>
+          </div>
+        </div>
+      </div>
+    }>
+      <AvailabilityPageContent />
+    </Suspense>
   );
 }
 
