@@ -50,7 +50,7 @@ export default function NotFound() {
               Search
             </button>
             <button
-              onClick={() => router.push('/signup')}
+              onClick={() => router.push('/partner-with-us')}
               className="text-rose-700 hover:text-rose-800"
             >
               List Service

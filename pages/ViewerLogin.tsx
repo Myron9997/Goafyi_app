@@ -25,7 +25,7 @@ export default function ViewerLogin() {
     // Prefetch related auth routes to speed up transitions
     try {
       router.prefetch('/vendor-login');
-      router.prefetch('/signup');
+      router.prefetch('/partner-with-us');
       router.prefetch('/home'); // Prefetch home page for fast redirect
       router.prefetch('/account'); // Also prefetch account for vendors
     } catch {}

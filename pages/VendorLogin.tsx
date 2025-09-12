@@ -19,7 +19,7 @@ export default function VendorLogin() {
     // Prefetch related auth routes to speed up transitions
     try {
       router.prefetch('/viewer-login');
-      router.prefetch('/signup');
+      router.prefetch('/partner-with-us');
       router.prefetch('/account'); // Prefetch account page for fast redirect
       router.prefetch('/home'); // Also prefetch home for viewers
     } catch {}
@@ -130,7 +130,7 @@ export default function VendorLogin() {
 
           <div className="mt-4 text-center text-xs text-gray-600 dark:text-gray-400">
             <span>Not signed up? </span>
-            <button onClick={() => router.push('/signup')} className="text-rose-700 hover:text-rose-800 font-medium">Register here</button>
+            <button onClick={() => router.push('/partner-with-us')} className="text-rose-700 hover:text-rose-800 font-medium">Register here</button>
           </div>
         </div>
       </div>

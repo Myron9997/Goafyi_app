@@ -41,7 +41,7 @@ export const LOCATIONS = [
 export const ROUTES = {
   HOME: '/',
   VENDOR_PROFILE: '/vendor/:id',
-  VENDOR_SIGNUP: '/signup',
+  VENDOR_SIGNUP: '/partner-with-us',
   VENDOR_LOGIN: '/vendor-login',
   VIEWER_LOGIN: '/viewer-login',
   ACCOUNT: '/account',

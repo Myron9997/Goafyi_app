@@ -15,7 +15,7 @@ export function Header() {
   const isActive = (path: string) => pathname === path;
   const isLandingPage = pathname === '/';
   const isVendorLoginPage = pathname === '/vendor-login';
-  const isVendorSignupPage = pathname === '/signup';
+  const isVendorSignupPage = pathname === '/signup' || pathname === '/partner-with-us';
   const isViewerLoginPage = pathname === '/viewer-login';
   const isViewerHomePage = pathname === '/home';
   const isVendorProfilePage = pathname.startsWith('/vendor/');
@@ -33,7 +33,7 @@ export function Header() {
   };
 
   return (
-    <header className="bg-white dark:bg-gray-900 shadow-sm sticky top-0 z-40 border-b border-gray-100 dark:border-gray-800 transition-colors duration-300">
+    <header className="bg-white dark:bg-gray-900 shadow-sm sticky top-0 z-50 border-b border-gray-100 dark:border-gray-800 transition-colors duration-300">
       <div className="max-w-6xl mx-auto px-4 h-12">
         <div className="flex items-center justify-between">
           {/* Logo */}
@@ -100,26 +100,9 @@ export function Header() {
             {/* No Admin link for vendors */}
           </nav>
 
-          {/* User Actions (simple sign out when logged in) */}
-          <div className="hidden md:flex items-center gap-3 -mt-4">
-            {!user ? (
-              <>
-                <button
-                  onClick={() => router.push('/vendor-login')}
-                  className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-rose-700 transition-colors"
-                  suppressHydrationWarning={true}
-                >
-                  Vendor Login
-                </button>
-                <button
-                  onClick={() => router.push('/viewer-login')}
-                  className="text-sm px-3 py-1 rounded-lg bg-rose-700 text-white hover:bg-rose-800 transition-colors"
-                  suppressHydrationWarning={true}
-                >
-                  Sign In
-                </button>
-              </>
-            ) : (
+          {/* User Actions - Only show Sign Out when logged in, no other buttons */}
+          {user && (
+            <div className="hidden md:flex items-center gap-3 -mt-4">
               <button
                 onClick={handleLogout}
                 className="text-sm px-3 py-1 rounded-lg bg-rose-700 text-white hover:bg-rose-800 transition-colors"
@@ -127,41 +110,11 @@ export function Header() {
               >
                 Sign Out
               </button>
-            )}
-          </div>
+            </div>
+          )}
 
-          {/* Mobile quick actions (visible on small screens) */}
-          <div className="md:hidden flex items-center gap-2 -mt-4">
-            {!user ? (
-              <>
-                <button
-                  onClick={() => router.push('/vendor-login')}
-                  className="text-[12px] font-medium text-gray-600 dark:text-gray-300 hover:text-rose-700 transition-colors px-2 py-1"
-                  suppressHydrationWarning={true}
-                >
-                  Vendor Login
-                </button>
-                <button
-                  onClick={() => router.push('/viewer-login')}
-                  className="text-[12px] px-3 py-1 rounded-lg bg-rose-700 text-white hover:bg-rose-800 transition-colors"
-                  suppressHydrationWarning={true}
-                >
-                  Sign In
-                </button>
-              </>
-            ) : (
-              <button
-                onClick={handleLogout}
-                className="text-[12px] px-3 py-1 rounded-lg bg-rose-700 text-white hover:bg-rose-800 transition-colors"
-                suppressHydrationWarning={true}
-              >
-                Sign Out
-              </button>
-            )}
-          </div>
-
-          {/* Mobile Menu Button - Hidden on landing page, vendor login, vendor signup, viewer login, viewer home, vendor profile, and account */}
-          {!isLandingPage && !isVendorLoginPage && !isVendorSignupPage && !isViewerLoginPage && !isViewerHomePage && !isVendorProfilePage && !isAccountPage && (
+          {/* Mobile Menu Button - Hidden on vendor login, vendor signup, viewer login, viewer home, vendor profile, and account */}
+          {!isVendorLoginPage && !isVendorSignupPage && !isViewerLoginPage && !isViewerHomePage && !isVendorProfilePage && !isAccountPage && (
             <button
               onClick={() => setMenuOpen(true)}
               className="md:hidden p-2 rounded-lg border border-gray-200 dark:border-gray-700 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors -mt-5"
@@ -174,9 +127,9 @@ export function Header() {
         </div>
       </div>
 
-      {/* Mobile Menu - Hidden on landing page, vendor login, vendor signup, viewer login, viewer home, vendor profile, and account */}
-      {menuOpen && !isLandingPage && !isVendorLoginPage && !isVendorSignupPage && !isViewerLoginPage && !isViewerHomePage && !isVendorProfilePage && !isAccountPage && (
-        <div className="fixed inset-0 z-50 md:hidden">
+      {/* Mobile Menu - Hidden on vendor login, vendor signup, viewer login, viewer home, vendor profile, and account */}
+      {menuOpen && !isVendorLoginPage && !isVendorSignupPage && !isViewerLoginPage && !isViewerHomePage && !isVendorProfilePage && !isAccountPage && (
+        <div className="fixed inset-0 z-[9999] md:hidden">
           <div 
             className="absolute inset-0 bg-black/40" 
             onClick={() => setMenuOpen(false)} 
@@ -194,7 +147,21 @@ export function Header() {
             </div>
 
             <nav className="space-y-2">
-              {user?.role === 'vendor' ? (
+              {isLandingPage ? (
+                /* Landing page mobile menu content */
+                <div className="space-y-4">
+                  {/* Welcome Section */}
+                  <div className="text-center py-4">
+                    <div className="w-16 h-16 bg-gradient-to-br from-rose-500 to-rose-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <img src="/logo.png" alt="GoaFYI" className="w-10 h-10" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Welcome to GoaFYI</h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                      Your gateway to Goa's best vendors
+                    </p>
+                  </div>
+                </div>
+              ) : user?.role === 'vendor' ? (
                 <>
                   <button
                     onClick={() => handleNavigation('/account')}
@@ -230,20 +197,43 @@ export function Header() {
             <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
               {!user ? (
                 <div className="space-y-3">
-                  <button
-                    onClick={() => handleNavigation('/vendor-login')}
-                    className="w-full text-left px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                    suppressHydrationWarning={true}
-                  >
-                    Vendor Login
-                  </button>
-                  <button
-                    onClick={() => handleNavigation('/viewer-login')}
-                    className="w-full px-3 py-2 rounded-lg bg-rose-700 text-white hover:bg-rose-800 transition-colors"
-                    suppressHydrationWarning={true}
-                  >
-                    Sign In
-                  </button>
+                  {isLandingPage ? (
+                    /* Landing page authentication buttons */
+                    <>
+                      <button
+                        onClick={() => handleNavigation('/partner-with-us')}
+                        className="w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                        suppressHydrationWarning={true}
+                      >
+                        Partner with us
+                      </button>
+                      <button
+                        onClick={() => handleNavigation('/viewer-login')}
+                        className="w-full px-3 py-2 rounded-lg bg-rose-700 text-white hover:bg-rose-800 transition-colors"
+                        suppressHydrationWarning={true}
+                      >
+                        Sign In
+                      </button>
+                    </>
+                  ) : (
+                    /* Regular authentication buttons */
+                    <>
+                      <button
+                        onClick={() => handleNavigation('/vendor-login')}
+                        className="w-full text-left px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                        suppressHydrationWarning={true}
+                      >
+                        Vendor Login
+                      </button>
+                      <button
+                        onClick={() => handleNavigation('/viewer-login')}
+                        className="w-full px-3 py-2 rounded-lg bg-rose-700 text-white hover:bg-rose-800 transition-colors"
+                        suppressHydrationWarning={true}
+                      >
+                        Sign In
+                      </button>
+                    </>
+                  )}
                 </div>
               ) : (
                 <div className="space-y-3">

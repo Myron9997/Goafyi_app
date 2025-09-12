@@ -2,8 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { SupabaseProvider } from "../context/SupabaseContext";
 import { AppProvider } from "../context/AppContext";
-import { Header } from "../components/Header";
-import { BottomNav } from "../components/BottomNav";
+import { ConditionalLayout } from "../components/ConditionalLayout";
 
 export const metadata: Metadata = {
   title: "GoaFYI - Event Vendors",
@@ -42,11 +41,9 @@ export default function RootLayout({
       <body className="min-h-screen bg-gray-50 dark:bg-gray-900 safe-area transition-colors duration-300" suppressHydrationWarning>
         <SupabaseProvider>
           <AppProvider>
-            <Header />
-            <main className="pb-20">
+            <ConditionalLayout>
               {children}
-            </main>
-            <BottomNav />
+            </ConditionalLayout>
           </AppProvider>
         </SupabaseProvider>
       </body>

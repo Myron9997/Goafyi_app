@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowLeft, User, Mail, Lock, Check } from 'lucide-react';
 import { useSupabase } from '../context/SupabaseContext';
 import { AuthService } from '../services/authService';
@@ -17,6 +17,7 @@ interface VendorSignupForm {
 
 export default function VendorSignup() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { signUp } = useSupabase();
   const [form, setForm] = useState<VendorSignupForm>({
     businessName: '',
@@ -25,11 +26,36 @@ export default function VendorSignup() {
     password: '',
     confirmPassword: ''
   });
+  
+  // Handle invitation data
+  const [invitationData, setInvitationData] = useState<{
+    email: string;
+    token: string;
+    businessName?: string;
+  } | null>(null);
 
   const [errors, setErrors] = useState<Partial<VendorSignupForm>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [tempCategories, setTempCategories] = useState<string[]>([]);
+
+  // Handle invitation data from URL params
+  useEffect(() => {
+    const invited = searchParams.get('invited');
+    const email = searchParams.get('email');
+    const token = searchParams.get('token');
+    const businessName = searchParams.get('businessName');
+
+    if (invited === 'true' && email && token) {
+      setInvitationData({ email, token, businessName: businessName || undefined });
+      // Pre-fill form with invitation data
+      setForm(prev => ({
+        ...prev,
+        email: email,
+        businessName: businessName || prev.businessName
+      }));
+    }
+  }, [searchParams]);
 
   // Prefetch related auth routes to speed up transitions
   React.useEffect(() => {
@@ -132,22 +158,65 @@ export default function VendorSignup() {
         return;
       }
       
-      console.log('✅ Email check passed, proceeding with signup...');
-      console.log('📤 Calling signUp with role: vendor');
-      
-      const result = await signUp(form.email, form.password, form.businessName, 'vendor');
-      console.log('🎉 Signup result:', result);
-      
-      if (result && result.user) {
-        console.log('✅ User created successfully:', result.user.id);
-        console.log('📧 Email confirmation sent:', result.user.email_confirmed_at ? 'Already confirmed' : 'Pending confirmation');
+      // If this is an invitation-based signup, use special API that skips email confirmation
+      if (invitationData) {
+        console.log('🎯 Creating invitation-based vendor account (no email confirmation needed)...');
         
-        // Navigate to confirmation page with email
-        console.log('🔄 Navigating to email confirmation page...');
-        router.push('/email-confirmation');
+        const response = await fetch('/api/create-invitation-user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: form.email,
+            password: form.password,
+            businessName: form.businessName,
+            invitationToken: invitationData.token
+          })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log('✅ Invitation-based account created successfully:', data);
+          
+          // Clear vendor cache to make new vendor show up immediately
+          try {
+            const keys = Object.keys(localStorage);
+            keys.forEach(key => {
+              if (key.startsWith('vendor_list_') || key.startsWith('vendor_profile_')) {
+                localStorage.removeItem(key);
+              }
+            });
+          } catch (error) {
+            console.warn('Failed to clear vendor cache:', error);
+          }
+          
+          // Navigate to vendor dashboard
+          router.push('/account');
+        } else {
+          const errorData = await response.json();
+          console.error('❌ Failed to create invitation-based account:', errorData);
+          setErrors({ email: errorData.message || 'Failed to create account. Please try again.' });
+        }
       } else {
-        console.log('❌ No user returned from signup');
-        setErrors({ email: 'Signup failed. Please try again.' });
+        // Regular signup flow - use normal signUp function
+        console.log('✅ Email check passed, proceeding with regular signup...');
+        console.log('📤 Calling signUp with role: vendor');
+        
+        const result = await signUp(form.email, form.password, form.businessName, 'vendor');
+        console.log('🎉 Signup result:', result);
+        
+        if (result && result.user) {
+          console.log('✅ User created successfully:', result.user.id);
+          console.log('📧 Email confirmation sent:', result.user.email_confirmed_at ? 'Already confirmed' : 'Pending confirmation');
+          
+          // Navigate to confirmation page
+          console.log('🔄 Navigating to email confirmation page...');
+          router.push('/email-confirmation');
+        } else {
+          console.log('❌ No user returned from signup');
+          setErrors({ email: 'Signup failed. Please try again.' });
+        }
       }
     } catch (error: any) {
       console.error('💥 Signup error:', error);
