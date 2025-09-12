@@ -83,11 +83,11 @@ export async function POST(request: NextRequest) {
           { status: 400 }
         );
       }
-    } catch (tableError) {
+    } catch (tableError: any) {
       return NextResponse.json(
         { 
           message: 'Failed to access vendor_invitations table',
-          error: tableError.message
+          error: tableError?.message || 'Unknown error'
         },
         { status: 500 }
       );
@@ -137,7 +137,7 @@ export async function POST(request: NextRequest) {
     };
     
     // Send email using Resend
-    let emailStatus = { sent: false, error: null, emailId: null };
+    let emailStatus: { sent: boolean; error: string | null; emailId: string | null } = { sent: false, error: null, emailId: null };
     
     if (process.env.RESEND_API_KEY) {
       try {
@@ -153,14 +153,14 @@ export async function POST(request: NextRequest) {
         emailStatus = {
           sent: true,
           error: null,
-          emailId: emailResult.data?.id
+          emailId: emailResult.data?.id || null
         };
 
         console.log('✅ Email sent successfully:', emailStatus);
-      } catch (emailError) {
+      } catch (emailError: any) {
         emailStatus = {
           sent: false,
-          error: emailError.message,
+          error: emailError?.message || 'Unknown error',
           emailId: null
         };
         console.error('❌ Email sending failed:', emailError);
@@ -188,12 +188,12 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     );
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('❌ Client auth invitation error:', error);
     return NextResponse.json(
       { 
         message: 'Failed to send invitation',
-        error: error.message
+        error: error?.message || 'Unknown error'
       },
       { status: 500 }
     );

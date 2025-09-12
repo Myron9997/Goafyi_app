@@ -197,9 +197,9 @@ function VendorOnboardingContent() {
               const errorData = await response.json();
               throw new Error(errorData.message || 'Failed to send invitation');
             }
-          } catch (error) {
+          } catch (error: any) {
             console.error('Error sending invitation:', error);
-            alert(`❌ Application approved but failed to send invitation!\n\nError: ${error.message}\n\nPlease check your email configuration in /admin/email-config`);
+            alert(`❌ Application approved but failed to send invitation!\n\nError: ${error?.message || 'Unknown error'}\n\nPlease check your email configuration in /admin/email-config`);
           }
         }
       }
@@ -410,7 +410,6 @@ function VendorOnboardingContent() {
       {/* Mobile-Optimized Modal */}
       {selectedApplication && (
         <div className="fixed inset-0 z-[9999] bg-black bg-opacity-50 flex items-center justify-center p-4">
-          {console.log('Modal rendering for application:', selectedApplication)}
           <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
               {/* Modal Header */}
               <div className="bg-red-100 px-4 py-4 border-b border-gray-200">
